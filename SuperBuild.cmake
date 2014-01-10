@@ -85,7 +85,7 @@ mark_as_superbuild(
 
 set(ITK_EXTERNAL_NAME ITKv${ITK_VERSION_MAJOR})
 
-set(Slicer_DEPENDENCIES curl teem VTK ${ITK_EXTERNAL_NAME} CTK LibArchive)
+set(Slicer_DEPENDENCIES curl teem VTK ${ITK_EXTERNAL_NAME} CTK LibArchive sqlite3)
 
 set(CURL_ENABLE_SSL ${Slicer_USE_PYTHONQT_WITH_OPENSSL})
 
@@ -100,6 +100,8 @@ endif()
 if(Slicer_BUILD_CLI_SUPPORT)
   list(APPEND Slicer_DEPENDENCIES SlicerExecutionModel)
 endif()
+
+list(APPEND Slicer_DEPENDENCIES PythonCppAPI)
 
 if(Slicer_BUILD_EXTENSIONMANAGER_SUPPORT)
   list(APPEND Slicer_DEPENDENCIES qRestAPI)
@@ -268,6 +270,7 @@ endif()
 #------------------------------------------------------------------------------
 set(proj Slicer)
 
+MESSAGE(STATUS "sqlite3 ${sqlite3_DIR}")
 ExternalProject_Add(${proj}
   ${${proj}_EP_ARGS}
   DEPENDS ${Slicer_DEPENDENCIES} ${Slicer_REMOTE_DEPENDENCIES}
@@ -295,6 +298,7 @@ ExternalProject_Add(${proj}
     -D${Slicer_MAIN_PROJECT_APPLICATION_NAME}_VERSION_RC:STRING=${${Slicer_MAIN_PROJECT_APPLICATION_NAME}_VERSION_RC}
     -DSlicer_APPLICATIONS_DIR:PATH=${Slicer_APPLICATIONS_DIR}
     -DSlicer_EXTENSION_SOURCE_DIRS:STRING=${Slicer_EXTENSION_SOURCE_DIRS}
+    -Dsqlite3_DIR:PATH=${sqlite3_DIR}
     ${EXTERNAL_PROJECT_OPTIONAL_ARGS}
   INSTALL_COMMAND ""
   )

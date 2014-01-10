@@ -807,6 +807,20 @@ find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
 
 #-----------------------------------------------------------------------------
+# sqlite3 
+#-----------------------------------------------------------------------------
+MESSAGE(STATUS "sqlite3 module path" ${sqlite3_DIR}) 
+SET(CMAKE_MODULE_PATH
+  ${sqlite3_DIR}
+  ${CMAKE_MODULE_PATH})
+MESSAGE(STATUS "cmake module path" ${CMAKE_MODULE_PATH})
+find_package(sqlite3 REQUIRED)
+if (sqlite3_FOUND)
+  MESSAGE(STATUS "sqlite3 found" ${sqlite3_INCLUDE_DIRS})
+endif(sqlite3_FOUND)
+include_directories(${sqlite3_INCLUDE_DIRS})
+
+#-----------------------------------------------------------------------------
 # qRestAPI
 #-----------------------------------------------------------------------------
 if(Slicer_BUILD_EXTENSIONMANAGER_SUPPORT)
@@ -908,6 +922,12 @@ endif()
 #-----------------------------------------------------------------------------
 set(SlicerExecutionModel_EXTRA_INCLUDE_DIRECTORIES "" CACHE INTERNAL "SlicerExecutionModel extra includes" FORCE)
 set(SlicerExecutionModel_EXTRA_EXECUTABLE_TARGET_LIBRARIES "" CACHE INTERNAL "SlicerExecutionModel extra executable target libraries" FORCE)
+
+#-----------------------------------------------------------------------------
+# PythonCppAPI settings
+#-----------------------------------------------------------------------------
+set(PythonCppAPI_EXTRA_INCLUDE_DIRECTORIES "" CACHE INTERNAL "PythonCppAPI extra includes" FORCE)
+set(PythonCppAPI_EXTRA_EXECUTABLE_TARGET_LIBRARIES "" CACHE INTERNAL "PythonCppAPI extra executable target libraries" FORCE)
 
 #-----------------------------------------------------------------------------
 # Set Slicer buildin libraries *_DIR variables
@@ -1151,6 +1171,24 @@ if(NOT Slicer_INSTALL_NO_DEVELOPMENT)
     COMPONENT Development
     )
 endif()
+
+#-----------------------------------------------------------------------------
+# copy needed cloud service python scripts over
+#-----------------------------------------------------------------------------
+set(files
+  Cloud/bottle.py
+  Cloud/SlicerCloudServer.py
+  Cloud/bottle_sqlite.py
+  Cloud/configobj.py
+  Cloud/ordereddict.py
+  ) 
+
+foreach(f ${files})
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/${f}
+    ${Slicer_BINARY_DIR}/${f}
+    COPYONLY)
+endforeach()
 
 #-----------------------------------------------------------------------------
 # Create target to download data from the <Slicer_ExternalData_DATA_MANAGEMENT_TARGET> group.

@@ -2,7 +2,7 @@
 set(proj python)
 
 # Set dependency list
-set(${proj}_DEPENDENCIES zlib)
+set(${proj}_DEPENDENCIES zlib sqlite3)
 if(NOT ${CMAKE_PROJECT_NAME}_USE_SYSTEM_python)
   list(APPEND ${proj}_DEPENDENCIES CTKAPPLAUNCHER)
 endif()
@@ -78,11 +78,15 @@ if((NOT DEFINED PYTHON_INCLUDE_DIRS
     list(APPEND EXTERNAL_PROJECT_OPTIONAL_CMAKE_CACHE_ARGS
       -DCMAKE_BUILD_TYPE:STRING=Release)
   endif()
-
+  
+  MESSAGE(STATUS "sqlite3 -- ${SLICER_SQLITE3_INCLUDE_DIR}")
+  MESSAGE(STATUS "sqlite3 lib -- ${SLICER_SQLITE3_LIBRARY}")
   ExternalProject_Add(${proj}
     ${${proj}_EP_ARGS}
-    GIT_REPOSITORY "${git_protocol}://github.com/davidsansome/python-cmake-buildsystem.git"
-    GIT_TAG "892c95b5024a52ebd47a12292ff74ec7d713db24"
+    GIT_REPOSITORY "${git_protocol}://github.com/grclirui/python-cmake-buildsystem.git"
+    GIT_TAG "29e029152022e0f3f7da40d5af5357e6b6a06d18"
+    #GIT_REPOSITORY "${git_protocol}://github.com/davidsansome/python-cmake-buildsystem.git"
+    #GIT_TAG "892c95b5024a52ebd47a12292ff74ec7d713db24"
     SOURCE_DIR ${CMAKE_BINARY_DIR}/${proj}
     BINARY_DIR ${proj}-build
     CMAKE_CACHE_ARGS
@@ -97,6 +101,8 @@ if((NOT DEFINED PYTHON_INCLUDE_DIRS
       -DUSE_SYSTEM_LIBRARIES:BOOL=OFF
       -DZLIB_INCLUDE_DIR:PATH=${ZLIB_INCLUDE_DIR}
       -DZLIB_LIBRARY:FILEPATH=${ZLIB_LIBRARY}
+      -DSQLITE3_INCLUDE_PATH:PATH=${SLICER_SQLITE3_INCLUDE_DIR}
+      -DSQLITE3_LIBRARY:PATH=${SLICER_SQLITE3_LIBRARY}
       -DENABLE_TKINTER:BOOL=${Slicer_USE_PYTHONQT_WITH_TCL}
       -DENABLE_SSL:BOOL=${PYTHON_ENABLE_SSL}
       ${EXTERNAL_PROJECT_OPTIONAL_CMAKE_CACHE_ARGS}

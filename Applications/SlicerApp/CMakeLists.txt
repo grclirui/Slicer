@@ -292,6 +292,19 @@ if(${PROJECT_NAME} STREQUAL ${Slicer_MAIN_PROJECT})
         OUTPUTVAR extraApplicationToLaunchListForBuildTree
         )
     endif()
+
+    set(PYTHON_CLOUD_SERVER "${Slicer_BINARY_DIR}/Cloud/SlicerCloudServer.py")
+    message(STATUS ${PYTHON_CLOUD_SERVER})
+    if (EXISTS "${PYTHON_CLOUD_SERVER}")
+      ctkApplauncherAppendExtraAppToLaunchToList(
+        LONG_ARG server
+        HELP "Start Slicer Cloud Server"
+        PATH ${PYTHON_EXECUTABLE}
+        ARGUMENTS ${PYTHON_CLOUD_SERVER}
+        OUTPUTVAR extraApplicationToLaunchListForBuildTree
+        )
+    endif()
+
     set(executables)
     if(UNIX)
       list(APPEND executables gnome-terminal xterm ddd gdb)
