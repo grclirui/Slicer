@@ -101,8 +101,6 @@ if(Slicer_BUILD_CLI_SUPPORT)
   list(APPEND Slicer_DEPENDENCIES SlicerExecutionModel)
 endif()
 
-list(APPEND Slicer_DEPENDENCIES PythonCppAPI)
-
 if(Slicer_BUILD_EXTENSIONMANAGER_SUPPORT)
   list(APPEND Slicer_DEPENDENCIES qRestAPI)
 endif()
@@ -135,6 +133,8 @@ endif()
 if(DEFINED Slicer_ADDITIONAL_DEPENDENCIES)
   list(APPEND Slicer_DEPENDENCIES ${Slicer_ADDITIONAL_DEPENDENCIES})
 endif()
+
+list(APPEND Slicer_DEPENDENCIES PythonCppAPI)
 
 mark_as_superbuild(Slicer_DEPENDENCIES:STRING)
 
