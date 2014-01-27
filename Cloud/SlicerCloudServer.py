@@ -7,9 +7,13 @@ from glob import glob
 import sqlite3 as lite
 import string
 import subprocess
-import json
+
 import ordereddict
 import xml.etree.ElementTree as etree
+
+
+try: import simplejson as json
+except ImportError: import json
 
 # compare two xml strings using etree
 def xmlstring_compare(xmlString1, xmlString2):
@@ -86,9 +90,9 @@ class SlicerCloudServer(object):
       return True
 
   def _route(self):
-    self._app.route('/list/', method="GET", callback=self.list_cli)
-    self._app.route('/describe/<moduleName>', callback=self.describe_cli)
-    self._app.route('/run/<commandString>', callback=self.run_cli)
+    self._app.route('/list', method="GET", callback=self.list_cli)
+    self._app.route('/describe/<moduleName>', method="GET", callback=self.describe_cli)
+    self._app.route('/run/<commandString>', method="POST", callback=self.run_cli)
 
   def start(self):
     self._app.run(host=self._host, port=self._port, reloader=True, debug=True)
@@ -114,6 +118,7 @@ class SlicerCloudServer(object):
     return json.dumps(moduleList)
 
   def describe_cli(self, moduleName):
+    print moduleName
     if self.conn == None:
       print "Error connecting to: %s" % self.cliDB
       return ''
@@ -124,8 +129,10 @@ class SlicerCloudServer(object):
       row = c.fetchone()
       return row[1]
 
-  def run_cli(self, commandString):
-    print commandString
+  def run_cli(self):
+    print "in runcli" % commandString
+
+    return commandString
 
   def __del__(self):
     if self.conn:

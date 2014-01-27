@@ -1178,6 +1178,7 @@ endif()
 set(files
   Cloud/bottle.py
   Cloud/SlicerCloudServer.py
+  Cloud/SlicerCloudClient.py
   Cloud/bottle_sqlite.py
   Cloud/configobj.py
   Cloud/ordereddict.py
